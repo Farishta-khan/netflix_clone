@@ -9,13 +9,21 @@
 <!-- NAVBAR -->
 <div class="navbar">
     <div class="logo">NETFLIX</div>
+    <!-- Search bar -->
+<div style="padding:10px 30px;">
+    <input id="searchInput" placeholder="Search movies..."
+        style="padding:10px;width:100%;max-width:400px;">
+</div>
     <button onclick="logout()">Logout</button>
 </div>
 
+
 <!-- HERO -->
 <div id="hero" class="hero">
-    <h1>Welcome to Netflix Clone</h1>
-    <p>Stream your favorite movies and TV shows.</p>
+    <div class="hero-content">
+    <h1>Loading...</h1>
+    <p>Please wait while we load your movies</p>
+    </div>
     <img src="../assets/hero.jpg" alt="Hero Image">
 </div>
 

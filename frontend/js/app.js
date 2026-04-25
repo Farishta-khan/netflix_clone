@@ -17,7 +17,21 @@ fetch("../../backend/api/get_movies.php")
     }
 
     // ---------------- HERO ----------------
-    const heroMovie = data.find(m => m.image) || data[0];
+const hero = document.getElementById("hero");
+
+const fallbackHero = "https://via.placeholder.com/1200x500/111/fff?text=Netflix+Clone";
+
+fetch("../../backend/api/get_movies.php")
+.then(res => res.json())
+.then(data => {
+
+    if(!data || data.length === 0){
+        hero.style.backgroundImage = `url('${fallbackHero}')`;
+        return;
+    }
+
+    // 🎯 RANDOM HERO EVERY LOAD
+    const heroMovie = data[Math.floor(Math.random() * data.length)];
 
     hero.style.backgroundImage = `url('${heroMovie.image || fallbackHero}')`;
 
@@ -26,11 +40,11 @@ fetch("../../backend/api/get_movies.php")
             <h1>${heroMovie.title}</h1>
             <p>${heroMovie.description || ""}</p>
             <button onclick="window.open('${heroMovie.video_url}', '_blank')">
-                ▶ Play
+                Play
             </button>
         </div>
     `;
-
+});
     // ---------------- GRID ----------------
     container.innerHTML = "";
 
@@ -59,4 +73,46 @@ fetch("../../backend/api/get_movies.php")
 
     hero.style.backgroundImage = `url(${fallbackHero})`;
     container.innerHTML = "<h3>Failed to load movies</h3>";
+});
+function logout() {
+    fetch("../../backend/api/logout.php")
+    .then(() => {
+        window.location.href = "login.html";
+    })
+    .catch(() => {
+        window.location.href = "login.html";
+    });
+}
+document.getElementById("searchInput").addEventListener("input", function(e){
+
+    const value = e.target.value.toLowerCase();
+
+    document.querySelectorAll(".movie-card").forEach(card => {
+
+        const title = card.innerText.toLowerCase();
+
+        if(title.includes(value)){
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+    });
+});
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("input", function () {
+
+    const value = this.value.toLowerCase();
+    const cards = document.querySelectorAll(".movie-card");
+
+    cards.forEach(card => {
+
+        const title = card.innerText.toLowerCase();
+
+        if (title.includes(value)) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+    });
 });
