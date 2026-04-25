@@ -1,36 +1,46 @@
 <?php
-session_start();
 include("../config/db.php");
 
-// CHECK INPUTS
-if (!isset($_POST['email'], $_POST['password'])) {
-    response("error", "Missing fields");
+header("Content-Type: application/json");
+
+$data = json_decode(file_get_contents("php://input"), true);
+
+$email = $data['email'] ?? '';
+$password = $data['password'] ?? '';
+
+if($email == '' || $password == ''){
+    echo json_encode([
+        "success" => false,
+        "message" => "Email and password required"
+    ]);
+    exit;
 }
 
-$email = $_POST['email'];
-$password = $_POST['password'];
+// SAFE QUERY (basic level)
+$email = $conn->real_escape_string($email);
+$password = $conn->real_escape_string($password);
 
-// FIND USER
-$result = $conn->query("SELECT * FROM users WHERE email='$email'");
+$sql = "SELECT * FROM users WHERE email='$email' AND password='$password'";
+$result = $conn->query($sql);
 
-if ($result->num_rows == 0) {
-    response("error", "User not found");
+if($result && $result->num_rows > 0){
+
+    $user = $result->fetch_assoc();
+
+    echo json_encode([
+        "success" => true,
+        "user" => [
+            "id" => $user['id'],
+            "name" => $user['name'],
+            "email" => $user['email']
+        ]
+    ]);
+
+} else {
+
+    echo json_encode([
+        "success" => false,
+        "message" => "Invalid email or password"
+    ]);
 }
-
-$user = $result->fetch_assoc();
-
-// VERIFY PASSWORD
-if (!password_verify($password, $user['password'])) {
-    response("error", "Wrong password");
-}
-
-// STORE SESSION (IMPORTANT PART)
-$_SESSION['user'] = [
-    "id" => $user['id'],
-    "name" => $user['name'],
-    "email" => $user['email']
-];
-
-// SUCCESS RESPONSE
-response("success", "Login successful", $_SESSION['user']);
 ?>
