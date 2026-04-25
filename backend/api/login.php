@@ -1,8 +1,6 @@
 <?php
 session_start();
 include("../config/db.php");
-echo json_encode($_POST);
-exit;
 
 // CHECK INPUTS
 if (!isset($_POST['email'], $_POST['password'])) {
@@ -35,6 +33,4 @@ $_SESSION['user'] = [
 
 // SUCCESS RESPONSE
 response("success", "Login successful", $_SESSION['user']);
-
-
 ?>

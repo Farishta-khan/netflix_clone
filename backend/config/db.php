@@ -11,6 +11,7 @@ $db   = "netflix_clone";
 $conn = new mysqli($host, $user, $pass, $db);
 
 if ($conn->connect_error) {
+
     echo json_encode([
         "status" => "error",
         "message" => "Database connection failed"
@@ -26,6 +27,10 @@ function response($status, $message, $data = null) {
         "data" => $data
     ]);
     exit;
+    die(json_encode([
+        "status" => "error",
+        "message" => "DB connection failed"
+    ]));
 }
 
 ?>

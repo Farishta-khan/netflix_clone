@@ -5,4 +5,6 @@ echo json_encode([
     "status" => "success",
     "message" => "DB connected successfully"
 ]);
+
+echo "DB CONNECTED SUCCESSFULLY";
 ?>
